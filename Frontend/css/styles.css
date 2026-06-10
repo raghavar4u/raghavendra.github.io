@@ -2918,25 +2918,60 @@ body {
 @media (max-width: 968px) {
     .nav-menu {
         position: fixed;
-        left: -100%;
+        left: 0;
+        right: 0;
         top: 80px;
         flex-direction: column;
         background: rgba(11, 20, 38, 0.95);
         backdrop-filter: var(--backdrop-blur);
         width: 100%;
         text-align: center;
-        transition: 0.3s;
+        transition: opacity 0.2s ease;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
         padding: 2rem 0;
         border-top: var(--glass-border);
+        z-index: 1001;
+        max-height: none;
+        overflow-y: visible;
+        pointer-events: none;
+        display: none;
+        opacity: 0;
     }
 
     .nav-menu.active {
-        left: 0;
+        display: flex;
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .hamburger {
         display: flex;
+    }
+
+    .nav-menu .nav-link {
+        color: #eaf2ff;
+        width: 100%;
+        justify-content: center;
+        font-size: 1rem;
+        padding: 0.9rem 1rem;
+        min-height: 44px;
+    }
+
+    .nav-menu .nav-item {
+        width: 100%;
+    }
+
+    .nav-menu .nav-link i {
+        color: #eaf2ff;
+    }
+
+    .nav-menu .nav-link.active {
+        color: #0b1426;
+        background: var(--gradient-accent);
+    }
+
+    .nav-menu .nav-link.active i {
+        color: #0b1426;
     }
 
     .hamburger.active .bar:nth-child(2) {
