@@ -2920,19 +2920,24 @@ body {
         position: fixed;
         left: 0;
         right: 0;
-        top: 80px;
+        top: 70px;
         flex-direction: column;
         background: rgba(11, 20, 38, 0.95);
         backdrop-filter: var(--backdrop-blur);
         width: 100%;
-        text-align: center;
+        text-align: left;
         transition: opacity 0.2s ease;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        padding: 2rem 0;
+        padding: 0.5rem 0;
         border-top: var(--glass-border);
         z-index: 1001;
-        max-height: none;
-        overflow-y: visible;
+        height: calc(100dvh - 70px);
+        max-height: calc(100dvh - 70px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        justify-content: flex-start;
         pointer-events: none;
         display: none;
         opacity: 0;
@@ -2951,10 +2956,12 @@ body {
     .nav-menu .nav-link {
         color: #eaf2ff;
         width: 100%;
-        justify-content: center;
+        justify-content: flex-start;
         font-size: 1rem;
-        padding: 0.9rem 1rem;
+        padding: 1rem 1.25rem;
         min-height: 44px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 0;
     }
 
     .nav-menu .nav-item {
@@ -3149,8 +3156,6 @@ body {
 /* Prevent body scroll when mobile menu is open */
 body.menu-open {
     overflow: hidden;
-    position: fixed;
-    width: 100%;
 }
 
 /* Mobile-First Responsive Breakpoints */

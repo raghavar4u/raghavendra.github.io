@@ -1388,12 +1388,79 @@
             const navMenu = document.querySelector('.nav-menu');
             const mobileOverlay = document.getElementById('mobileOverlay') || document.querySelector('.mobile-overlay');
 
-            if (hamburger) {
-                hamburger.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleMobileMenu();
+            function getMobileDrawer() {
+                let drawer = document.getElementById('mobileNavDrawer');
+                if (!drawer) {
+                    drawer = document.createElement('div');
+                    drawer.id = 'mobileNavDrawer';
+                    drawer.style.position = 'fixed';
+                    drawer.style.top = '70px';
+                    drawer.style.left = '0';
+                    drawer.style.right = '0';
+                    drawer.style.bottom = '0';
+                    drawer.style.background = 'rgba(11, 20, 38, 0.98)';
+                    drawer.style.backdropFilter = 'blur(10px)';
+                    drawer.style.zIndex = '3000';
+                    drawer.style.display = 'none';
+                    drawer.style.overflowY = 'auto';
+                    drawer.style.padding = '8px 0';
+                    document.body.appendChild(drawer);
+                }
+                return drawer;
+            }
+
+            function closeMobileDrawer() {
+                const drawer = document.getElementById('mobileNavDrawer');
+                if (drawer) drawer.style.display = 'none';
+            }
+
+            function renderMobileDrawer() {
+                const drawer = getMobileDrawer();
+                const links = Array.from(document.querySelectorAll('.nav-menu .nav-link'));
+                drawer.innerHTML = '';
+
+                links.forEach(link => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = link.textContent.trim();
+                    btn.style.width = '100%';
+                    btn.style.textAlign = 'left';
+                    btn.style.padding = '14px 18px';
+                    btn.style.color = '#eaf2ff';
+                    btn.style.background = 'transparent';
+                    btn.style.border = '0';
+                    btn.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                    btn.style.fontSize = '16px';
+                    btn.style.cursor = 'pointer';
+
+                    btn.addEventListener('click', function() {
+                        link.click();
+                        closeMobileDrawer();
+                    });
+
+                    drawer.appendChild(btn);
                 });
+            }
+
+            function toggleMobileDrawer() {
+                const drawer = getMobileDrawer();
+                renderMobileDrawer();
+                const willOpen = drawer.style.display === 'none' || drawer.style.display === '';
+                drawer.style.display = willOpen ? 'block' : 'none';
+                if (hamburger) hamburger.classList.toggle('active', willOpen);
+                document.body.classList.toggle('menu-open', willOpen);
+            }
+
+            if (hamburger) {
+                // Capture phase prevents duplicate handlers from toggling twice.
+                hamburger.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 968) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        toggleMobileDrawer();
+                    }
+                }, true);
             }
 
             if (mobileOverlay) {
@@ -1408,11 +1475,20 @@
                         closeMobileMenu();
                     }
                 }
+                const drawer = document.getElementById('mobileNavDrawer');
+                if (window.innerWidth <= 968 && drawer && drawer.style.display === 'block') {
+                    const clickedInsideDrawer = drawer.contains(e.target);
+                    const clickedHamburger = hamburger && hamburger.contains(e.target);
+                    if (!clickedInsideDrawer && !clickedHamburger) {
+                        closeMobileDrawer();
+                    }
+                }
             });
 
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 968) {
                     closeMobileMenu();
+                    closeMobileDrawer();
                     if (navMenu) {
                         navMenu.style.display = '';
                         navMenu.style.flexDirection = '';
@@ -1436,6 +1512,7 @@
                     // Close mobile menu on link click
                     if (window.innerWidth <= 968) {
                         closeMobileMenu();
+                        closeMobileDrawer();
                     }
                 });
             });
